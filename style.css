@@ -21,10 +21,11 @@ h2{
 #board{
     display: grid;
     grid-template-columns: repeat(3, auto);
-    width: 100vw;
-    height: 100vh;
+    width: 500px;
+    height: 500px;
     justify-content: center;
     align-content: center;
+    margin: 0 auto;
 }
 
 .field {
@@ -32,6 +33,61 @@ h2{
     height: 100px;
     border: 1px solid rgb(68, 63, 63);
     background-color: rgb(255, 245, 230);
+    &:first-child{
+        border-top: 0;
+        border-left: 0;
+      }
+      &:nth-child(2){
+        border-top: 0;
+      }
+      &:nth-child(3){
+        border-top: 0;
+        border-right: 0;
+      }
+      &:nth-child(4){
+        border-left: 0;
+      }
+      &:nth-child(6){
+        border-right: 0;
+      }
+      &:nth-child(7){
+        border-left: 0;
+        border-bottom: 0;
+      }
+      &:nth-child(8){
+        border-bottom: 0;
+      }
+      &:nth-child(9){
+        border-right: 0;
+        border-bottom: 0;
+      }
 
 }
-  
+
+.players{
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 200px;
+    justify-content: space-evenly;
+    align-items: center;
+    margin:0 auto;
+}
+
+#restart{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(33, 33, 33);
+    opacity: 0.8;
+    z-index: 2;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display:none;
+}
+
+.winner{
+    color:whitesmoke
+}

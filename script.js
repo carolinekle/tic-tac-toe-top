@@ -25,3 +25,10 @@ const player = (name, field) => {
     // query select ?
     return //name
   }
+
+  const restartGAME = () =>{
+    const restart = document.querySelector(".restart")
+    restart.addEventListener("click", () => {
+      gameBoard;
+  })
+}
