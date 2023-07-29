@@ -1,34 +1,39 @@
-const player = (name, field) => {
-    const getField = () => field;
-    const getName  = () => name;
+const playerSign = () => {
+    const playerX = "X"
+    const playerO = "O"
+    return{playerO, playerX}
   };
   
 
   const gameBoard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
     
-    const setFields = () =>{
-         const fields = document.querySelector("[data-field]")
-        fields 
+    const getFields = () => {
+      const fields = document.querySelectorAll("[data-field]")
+      fields.addEventListener("click", setMarker,{
+      once: true
+      })
     }
-    
     const setMarker = () => {
+      fiends.innerText = "bye";
     }
   })
 
   const getName = () => {
-    //query select from input
-    return //field
+    const playerXName = document.querySelector('[name="playerOne"]');
+    const playerOName = document.querySelector('[name="playerTwo"]')
+    return  {playerXName, playerOName}
   }
 
-  const getField = () => {
-    // query select ?
-    return //name
-  }
 
-  const restartGAME = () =>{
+  const restartGame = () =>{
     const restart = document.querySelector(".restart")
     restart.addEventListener("click", () => {
       gameBoard;
   })
 }
+
+
+
+//✗
+//ꙩ
