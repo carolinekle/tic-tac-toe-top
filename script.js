@@ -1,35 +1,77 @@
-const player = (sign) => {
-  this.sign = sign //where does sign exist?
-    return{ sign}
-  };
+const player = (playerName, sign) => {
+
+  return { playerName, sign };
+
+}
 
   const gameBoard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
     
 
-      const setFields = (index, sign) => {
-        if (index > board.length) return;
-        board[index] = sign
+    const setFields = (index, sign) => {
+      if (index > board.length) return;
+      board[index] = sign
     }
 
     const getFields = (index) => {
       return board[index]
     }
 
-/*     const restartGame = () =>{
-      const restart = document.querySelector(".restart")
-      restart.addEventListener("click", () => {
-        ;
-    })
-  } */
+    const reset = () => {
+      for (let i = 0; i < board.length; i++) {
+        board[i] = "";
+      }
+    };
   
-    return {setFields,getFields/* , restartGame */}
+    return {setFields,getFields, reset}
+  })();
+
+
+  const displays = (() => {
+    const winnerMessage =document.querySelector(".winner")
+    restartButton = document.getElementById("restart");
+    const finalMessage = document.querySelector("final")
+    restartButton.addEventListener("click", ()=> {
+      gameBoard.reset();
+      gameControlls.resetGame();
+      updateGameboard();
+    })
+
+    const fields = document.querySelectorAll("[data-field]");
+    fields.forEach((field) => {
+      field.addEventListener("click", () => { //work on this when gamecontroller and round is set up
+        gameControlls.turns()
+      });
+    });
+
+    restartButton.addEventListener("click", (e) => {
+      gameBoard.reset();
+      gameControlls.resetGame();
+      updateGame();
+      setMessageElement("Player X's turn");
+    });
+
+    const setResultMessage = (winner) =>{
+      if (winner === "draw"){
+        finalMessage.style.display = "flex";
+        winnerMessage.innerText = "It's a draw!"
+      }else{
+        finalMessage.style.display = "flex";
+        winnerMessage.innerText = (`${PLAYER} has won!`);
+      }
+    }
+
+    const setMarker = (index, sign) => {
+      gameBoard.setFields(index, sign); 
+    };
+
+    return{setMarker, setResultMessage}
   })();
 
 
   const gameControlls = (() => {
-    const playerX = player( "✗");
-    const playerO = player("ꙩ");
+    const playerX = player(document.querySelector('[name="playerOne"]').value, "✗");
+    const playerO = player(document.querySelector('[name="playerTwo"]').value, "ꙩ");
     let turnX = true
     const turns = () => {
       if (gameBoard.turnX === true) {
@@ -43,10 +85,18 @@ const player = (sign) => {
       }
     }
 
-    setMarker = () => {
 
+    resetGame = () => {
+      
+      }
 
-    }
+    const updateGame = () => {
+      for (let i = 0; i < fieldElements.length; i++) {
+        fieldElements[i].textContent = gameBoard.getField(i);
+      }
+    };
+  
+  
     const checkWinner = (fieldIndex) => {
         const winningConditions = [
           [0, 1, 2],
@@ -58,7 +108,7 @@ const player = (sign) => {
           [0, 4, 8],
           [2, 4, 6],
         ];
-        return winConditions
+        return winningConditions
         .filter((combination) => combination.includes(fieldIndex))
         .some((possibleCombination) =>
           possibleCombination.every(
@@ -66,31 +116,6 @@ const player = (sign) => {
           )
           );
   }
+  return {turns, checkWinner, resetGame, updateGame}
   })()
 
-
-  const displays = (() => {
-    const fields = document.querySelectorAll("[data-field]");
-    fields.forEach((field, index) => {
-      field.addEventListener("click", () => {
-        gameControlls.turns()
-      });
-    });
-    const setMarker= () => {
-
-    }
-    return 
-  })();
-
-/*   const getName = () => {
-    const submitNames = document.querySelector(".submit-names");
-    submitNames.addEventListener("click", () => {
-      const playerXName = document.querySelector('[name="playerOne"]').value;
-      const playerOName = document.querySelector('[name="playerTwo"]').value;
-      player( playerXName, playerOName);
-  
-
-    });
-  };
-  player(playerXName, "c");
-  player(playerOName, "ꙩ"); */
