@@ -6,7 +6,7 @@ const player = (playerName, sign) => {
 
   const gameBoard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
-    
+    console.log(board)
 
     const setFields = (index, sign) => {
       if (index > board.length) return;
@@ -28,28 +28,35 @@ const player = (playerName, sign) => {
 
 
   const displays = (() => {
-    const winnerMessage =document.querySelector(".winner")
-    restartButton = document.getElementById("restart");
-    const finalMessage = document.querySelector("final")
-    restartButton.addEventListener("click", ()=> {
-      gameBoard.reset();
-      gameControlls.resetGame();
-      updateGameboard();
-    })
+    /* const winnerMessage = () => {
+      if (winner === ""){
+        
+      const winnerMessage = document.querySelector(".winner")
+  
+      const restartButton = document.getElementById("restart-button");
+      const finalMessage = document.querySelector("final")
+      restartButton.addEventListener("click", ()=> {
+        gameBoard.reset();
+        gameControlls.resetGame();
+        updateGameboard();
+        return finalMessage
+    })}
+    else{ return finalMessage }
+  } */
 
-    const fields = document.querySelectorAll("[data-field]");
-    fields.forEach((field) => {
-      field.addEventListener("click", () => { //work on this when gamecontroller and round is set up
-        gameControlls.turns()
-      });
+  const fields = document.querySelectorAll("[data-field]");
+  fields.forEach((field, index) => {
+    field.addEventListener("click", () => {
+      gameControlls.turns(index);
+      gameControlls.updateGame();
     });
-
-    restartButton.addEventListener("click", (e) => {
-      gameBoard.reset();
-      gameControlls.resetGame();
-      updateGame();
-      setMessageElement("Player X's turn");
-    });
+  });
+  console.log(fields)
+/*   restartButton.addEventListener("click", (e) => {
+    gameBoard.reset();
+    gameControlls.resetGame();
+    updateGame();
+  }); */
 
     const setResultMessage = (winner) =>{
       if (winner === "draw"){
@@ -65,7 +72,7 @@ const player = (playerName, sign) => {
       gameBoard.setFields(index, sign); 
     };
 
-    return{setMarker, setResultMessage}
+    return{setMarker, setResultMessage, fields}
   })();
 
 
@@ -73,49 +80,48 @@ const player = (playerName, sign) => {
     const playerX = player(document.querySelector('[name="playerOne"]').value, "✗");
     const playerO = player(document.querySelector('[name="playerTwo"]').value, "ꙩ");
     let turnX = true
-    const turns = () => {
-      if (gameBoard.turnX === true) {
-        field.innerText = gameBoard.playerX.sign;
-        setMarker(index, playerX.sign);
-        turnX = !turnX;
-      } else {
-        field.innerText = gameBoard.playerO.sign;
-        setMarker(index, playerO.sign);
-        turnX = !turnX;
+    
+    const turns = (index) => {
+      if (gameBoard.getFields(index) === "") {
+        if (turnX === true) {
+          displays.setMarker(index, playerX.sign);
+          updateGame()
+        } else {
+          displays.setMarker(index, playerO.sign);
+          updateGame();
+        }
+        turnX = !turnX; 
       }
-    }
+    };
 
-
-    resetGame = () => {
+    const resetGame = () => {
       
       }
 
-    const updateGame = () => {
-      for (let i = 0; i < fieldElements.length; i++) {
-        fieldElements[i].textContent = gameBoard.getField(i);
-      }
+      const updateGame = () => {
+        for (let i = 0; i < displays.fields.length; i++) {
+          displays.fields[i].innerHTML = gameBoard.getFields(i);
+        }
+      };
+  
+    const checkWinner = () => {
+      const winningConditions = [
+        [0, 1, 2], 
+        [3, 4, 5], 
+        [6, 7, 8], 
+        [0, 3, 6], 
+        [1, 4, 7], 
+        [2, 5, 8], 
+        [0, 4, 8], 
+        [2, 4, 6], 
+      ];
+      const currentPlayerSign = turnX ? playerX.sign : playerO.sign;
+
+      return winningConditions.some((combination) =>
+        combination.every((index) => gameBoard.getFields(index) === currentPlayerSign)
+      );
     };
-  
-  
-    const checkWinner = (fieldIndex) => {
-        const winningConditions = [
-          [0, 1, 2],
-          [3, 4, 5],
-          [6, 7, 8],
-          [0, 3, 6],
-          [1, 4, 7],
-          [2, 5, 8],
-          [0, 4, 8],
-          [2, 4, 6],
-        ];
-        return winningConditions
-        .filter((combination) => combination.includes(fieldIndex))
-        .some((possibleCombination) =>
-          possibleCombination.every(
-            (index) => gameBoard.getField(index) === getCurrentPlayerSign()
-          )
-          );
-  }
-  return {turns, checkWinner, resetGame, updateGame}
+/*   const restartButton = displays.restartButton; */
+  return {turns, checkWinner, resetGame, updateGame, playerX, playerO}
   })()
 
