@@ -6,7 +6,7 @@ const player = (playerName, sign) => {
 
   const gameBoard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
-    console.log(board)
+
 
     const setFields = (index, sign) => {
       if (index > board.length) return;
@@ -80,6 +80,7 @@ const player = (playerName, sign) => {
     const playerX = player(document.querySelector('[name="playerOne"]').value, "✗");
     const playerO = player(document.querySelector('[name="playerTwo"]').value, "ꙩ");
     let turnX = true
+    let round = 1;
     
     const turns = (index) => {
       if (gameBoard.getFields(index) === "") {
@@ -103,24 +104,23 @@ const player = (playerName, sign) => {
           displays.fields[i].innerHTML = gameBoard.getFields(i);
         }
       };
-  
-    const checkWinner = () => {
-      const winningConditions = [
-        [0, 1, 2], 
-        [3, 4, 5], 
-        [6, 7, 8], 
-        [0, 3, 6], 
-        [1, 4, 7], 
-        [2, 5, 8], 
-        [0, 4, 8], 
-        [2, 4, 6], 
-      ];
-      const currentPlayerSign = turnX ? playerX.sign : playerO.sign;
-
-      return winningConditions.some((combination) =>
-        combination.every((index) => gameBoard.getFields(index) === currentPlayerSign)
-      );
-    };
+      const checkWinner = () => {
+        const winningConditions = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6],
+        ];
+        const currentPlayerSign = turnX ? playerX.sign : playerO.sign;
+      
+        return winningConditions.some((combination) =>
+          combination.every((index) => gameBoard.getFields(index) === currentPlayerSign)
+        );
+      };
 /*   const restartButton = displays.restartButton; */
   return {turns, checkWinner, resetGame, updateGame, playerX, playerO}
   })()
