@@ -1,21 +1,19 @@
 const player = (playerName, sign) => {
-
   return { playerName, sign };
-
 }
 
   const gameBoard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
 
-
     const setFields = (index, sign) => {
-      if (index > board.length) return;
-      board[index] = sign
-    }
+      if (index >= board.length) return;
+      board[index] = sign;
+    };
 
     const getFields = (index) => {
-      return board[index]
-    }
+      if (index > board.length) return;
+      return board[index];
+    };
 
     const reset = () => {
       for (let i = 0; i < board.length; i++) {
@@ -26,23 +24,12 @@ const player = (playerName, sign) => {
     return {setFields,getFields, reset}
   })();
 
-
-  const displays = (() => {
-    /* const winnerMessage = () => {
-      if (winner === ""){
-        
-      const winnerMessage = document.querySelector(".winner")
-  
-      const restartButton = document.getElementById("restart-button");
-      const finalMessage = document.querySelector("final")
-      restartButton.addEventListener("click", ()=> {
-        gameBoard.reset();
-        gameControlls.resetGame();
-        updateGameboard();
-        return finalMessage
-    })}
-    else{ return finalMessage }
-  } */
+const displays = (() => {
+  const winnerMessage = document.getElementById("message")
+  /*   
+      const restartButton = document.getElementById("restart-button"); */
+      const finalMessage = document.getElementById("final")
+  const restartButton = document.getElementById("restart-button");
 
   const fields = document.querySelectorAll("[data-field]");
   fields.forEach((field, index) => {
@@ -51,61 +38,84 @@ const player = (playerName, sign) => {
       gameControlls.updateGame();
     });
   });
-  console.log(fields)
-/*   restartButton.addEventListener("click", (e) => {
+
+  restartButton.addEventListener("click", () => {
     gameBoard.reset();
-    gameControlls.resetGame();
-    updateGame();
-  }); */
+    displays.resetGame();
+    gameControlls.updateGame();
+  }); 
 
-    const setResultMessage = (winner) =>{
-      if (winner === "draw"){
-        finalMessage.style.display = "flex";
-        winnerMessage.innerText = "It's a draw!"
-      }else{
-        finalMessage.style.display = "flex";
-        winnerMessage.innerText = (`${PLAYER} has won!`);
-      }
+  const setResultMessage = (winner) =>{
+
+    if (winner === "draw"){
+      finalMessage.style.zIndex = "3";
+      finalMessage.style.opacity = "0.8";
+      winnerMessage.innerText = "It's a draw!"
+    }else{
+      finalMessage.style.zIndex = "3";
+      finalMessage.style.opacity = "0.8";
+      winnerMessage.innerText = winner + " has won!";
     }
+  }
 
-    const setMarker = (index, sign) => {
-      gameBoard.setFields(index, sign); 
-    };
+  const setMarker = (index, sign) => {
+    gameBoard.setFields(index, sign);
+  };
 
-    return{setMarker, setResultMessage, fields}
-  })();
+  const resetGame = () =>{
+    finalMessage.style.zIndex = "-2";
+    finalMessage.style.opacity = "0.0";
+    winnerMessage.innerText = ""
+    document.querySelector('[name="playerOne"]').value = ""
+    document.querySelector('[name="playerTwo"]').value = ""
+  }
+    return{setMarker, setResultMessage, fields, resetGame}
+})();
 
-
-  const gameControlls = (() => {
-    const playerX = player(document.querySelector('[name="playerOne"]').value, "✗");
-    const playerO = player(document.querySelector('[name="playerTwo"]').value, "ꙩ");
-    let turnX = true
-    let round = 1;
+const gameControlls = (() => {
+  let playerX, playerO;
+  const submitNames = document.querySelector(".submit-names");
+    submitNames.addEventListener("click", ()=> {
+     playerX = player(document.querySelector('[name="playerOne"]').value, "✗");
+     playerO = player(document.querySelector('[name="playerTwo"]').value, "ꙩ");
+  turns()
+  })
+  let turnX = true
+  let round = 1;
     
-    const turns = (index) => {
-      if (gameBoard.getFields(index) === "") {
-        if (turnX === true) {
-          displays.setMarker(index, playerX.sign);
-          updateGame()
-        } else {
-          displays.setMarker(index, playerO.sign);
-          updateGame();
+  const turns = (index) => {
+    if (gameBoard.getFields(index) === "") {
+      if (turnX === true) {
+        displays.setMarker(index, playerX.sign);
+        if(checkWinner()){
+          displays.setResultMessage(playerX.playerName)
+          return
         }
-        turnX = !turnX; 
-      }
-    };
-
-    const resetGame = () => {
-      
-      }
-
-      const updateGame = () => {
-        for (let i = 0; i < displays.fields.length; i++) {
-          displays.fields[i].innerHTML = gameBoard.getFields(i);
+      } else {
+        displays.setMarker(index, playerO.sign);
+        updateGame();
+        if(checkWinner()){
+          displays.setResultMessage(playerO.playerName)
+          return
         }
-      };
-      const checkWinner = () => {
-        const winningConditions = [
+      }
+    round++;
+    if (round === 10) {
+      displays.setResultMessage("draw");
+    }
+    updateGame();
+    turnX = !turnX;
+    }
+  };
+
+  const updateGame = () => {
+    for (let i = 0; i < displays.fields.length; i++) {
+      displays.fields[i].innerHTML = gameBoard.getFields(i);
+    }
+  };
+  
+  const checkWinner = () => {
+      const winningConditions = [
           [0, 1, 2],
           [3, 4, 5],
           [6, 7, 8],
@@ -115,13 +125,11 @@ const player = (playerName, sign) => {
           [0, 4, 8],
           [2, 4, 6],
         ];
-        const currentPlayerSign = turnX ? playerX.sign : playerO.sign;
+      const currentPlayerSign = turnX ? playerX.sign : playerO.sign;
       
         return winningConditions.some((combination) =>
           combination.every((index) => gameBoard.getFields(index) === currentPlayerSign)
-        );
-      };
-/*   const restartButton = displays.restartButton; */
-  return {turns, checkWinner, resetGame, updateGame, playerX, playerO}
-  })()
-
+      );
+  };
+return {turns, checkWinner,  updateGame, playerX, playerO}
+})()

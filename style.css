@@ -80,17 +80,16 @@ h2{
     width: 100vw;
     height: 100vh;
     background-color: rgb(33, 33, 33);
-    opacity: 0.8;
-    z-index: 2;
+    opacity: 0.0;
+    z-index: -2;
     position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    display:none;
 }
 
-.winner{
+#message{
     color:whitesmoke
 }
 
