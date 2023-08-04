@@ -1,7 +1,6 @@
 const player = (playerName, sign) => {
   return { playerName, sign };
 }
-
   const gameBoard = (() => {
     const board = ["", "", "", "", "", "", "", "", ""];
 
@@ -26,9 +25,7 @@ const player = (playerName, sign) => {
 
 const displays = (() => {
   const winnerMessage = document.getElementById("message")
-  /*   
-      const restartButton = document.getElementById("restart-button"); */
-      const finalMessage = document.getElementById("final")
+  const finalMessage = document.getElementById("final")
   const restartButton = document.getElementById("restart-button");
 
   const fields = document.querySelectorAll("[data-field]");
